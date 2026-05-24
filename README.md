@@ -142,6 +142,12 @@ For self-hosted Bark, set `BARK_SERVER` to your server URL.
 Create a bot with BotFather, put its token in `TELEGRAM_BOT_TOKEN`, and set
 `TELEGRAM_CHAT_ID` to the target chat ID.
 
+Set `TELEGRAM_ENABLED=true`, or enable Telegram from the control page and save the settings,
+before using the notification test button.
+
+The token must be the full BotFather token, usually shaped like
+`1234567890:AA...`. If the token does not contain `:`, it is not the full bot token.
+
 For direct messages, send `/start` to the bot once before testing. For group chats, add the bot
 to the group and use the group chat ID.
 

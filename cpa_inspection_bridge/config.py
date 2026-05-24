@@ -87,7 +87,7 @@ def merge_settings(current: Settings, patch: dict[str, Any]) -> Settings:
             continue
         if key in ("cpa_management_key", "telegram_bot_token", "bark_device_key"):
             text = str(value or "").strip()
-            if not text or "*" in text:
+            if not text or is_masked_secret(text):
                 continue
             data[key] = text
         elif isinstance(data[key], bool):
@@ -104,6 +104,10 @@ def merge_settings(current: Settings, patch: dict[str, Any]) -> Settings:
     data["interval_minutes"] = max(1, min(60 * 24 * 7, int(data["interval_minutes"])))
     data["quota_threshold"] = max(0.0, min(100.0, float(data["quota_threshold"])))
     return Settings(**data)
+
+
+def is_masked_secret(value: str) -> bool:
+    return "*" in value or "..." in value
 
 
 def parse_bool(value: Any, default: bool = False) -> bool:

@@ -132,6 +132,10 @@ BARK_DEVICE_KEY=your-device-key
 
 用 BotFather 建立 bot，把 token 放到 `TELEGRAM_BOT_TOKEN`，並把 `TELEGRAM_CHAT_ID` 設為目標 chat ID。
 
+使用測試通知按鈕前，請先設定 `TELEGRAM_ENABLED=true`，或在控制頁勾選啟用 Telegram 並儲存設定。
+
+Token 必須是 BotFather 給的完整 token，通常長得像 `1234567890:AA...`。如果 token 裡沒有 `:`，就不是完整 bot token。
+
 如果是私訊推送，請先對 bot 傳一次 `/start` 再測試。如果是群組推送，請把 bot 加入群組，並使用群組的 chat ID。
 
 ## 臨時工具定位

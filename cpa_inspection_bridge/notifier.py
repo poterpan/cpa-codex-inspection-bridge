@@ -45,6 +45,8 @@ class Notifier:
         chat_id = self.settings.telegram_chat_id.strip()
         if not token or not chat_id:
             raise RuntimeError("telegram bot token and chat id are required")
+        if not looks_like_telegram_bot_token(token):
+            raise RuntimeError("telegram bot token looks invalid; expected the full BotFather token like 1234567890:AA...")
         api_base = self.settings.telegram_api_base.strip().rstrip("/") or "https://api.telegram.org"
         endpoint = f"{api_base}/bot{token}/sendMessage"
         return post_json(endpoint, {"chat_id": chat_id, "text": text})
@@ -62,6 +64,11 @@ class Notifier:
             "group": self.settings.bark_group or "CPA Codex Inspection",
         }
         return post_json(endpoint, payload)
+
+
+def looks_like_telegram_bot_token(token: str) -> bool:
+    prefix, sep, suffix = token.partition(":")
+    return bool(sep and prefix.isdigit() and len(suffix) >= 20)
 
 
 def render_body(summary: dict[str, Any], results: list[dict[str, Any]]) -> str:

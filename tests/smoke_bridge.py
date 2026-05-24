@@ -6,12 +6,14 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from cpa_inspection_bridge.config import Settings
+from cpa_inspection_bridge.config import Settings, merge_settings
 from cpa_inspection_bridge.db import Database
+from cpa_inspection_bridge.notifier import looks_like_telegram_bot_token
 from cpa_inspection_bridge.service import BridgeService
 
 
 MANAGEMENT_KEY = "test-management-key"
+TELEGRAM_TOKEN = "1234567890:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
 
 
 class MockCPAHandler(BaseHTTPRequestHandler):
@@ -94,6 +96,13 @@ class MockCPAHandler(BaseHTTPRequestHandler):
 
 
 def main() -> None:
+    current = Settings(telegram_bot_token=TELEGRAM_TOKEN)
+    masked = current.public_dict()["telegram_bot_token"]
+    merged = merge_settings(current, {"telegram_bot_token": masked})
+    assert merged.telegram_bot_token == TELEGRAM_TOKEN
+    assert looks_like_telegram_bot_token(TELEGRAM_TOKEN)
+    assert not looks_like_telegram_bot_token(masked)
+
     server = ThreadingHTTPServer(("127.0.0.1", 0), MockCPAHandler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
