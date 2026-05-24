@@ -84,6 +84,9 @@ The control page lets you configure:
 - Bark notification settings
 - notification behavior for clean and abnormal runs
 
+The notification test button only sends to enabled channels. If Telegram or Bark credentials
+are filled in but the channel is not enabled, the test is skipped and the UI reports why.
+
 `CPA_BASE_URL` can be any endpoint that serves compatible CPA management API routes, including
 an admin/reverse-proxy domain, as long as these paths work with the management key:
 
@@ -138,6 +141,9 @@ For self-hosted Bark, set `BARK_SERVER` to your server URL.
 
 Create a bot with BotFather, put its token in `TELEGRAM_BOT_TOKEN`, and set
 `TELEGRAM_CHAT_ID` to the target chat ID.
+
+For direct messages, send `/start` to the bot once before testing. For group chats, add the bot
+to the group and use the group chat ID.
 
 ## Temporary By Design
 

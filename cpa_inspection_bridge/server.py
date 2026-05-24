@@ -89,8 +89,22 @@ class ControlServer:
                     attempts = []
                     if settings.telegram_enabled:
                         attempts.append(notifier._attempt("telegram", lambda: notifier.send_telegram("CPA Codex inspection bridge test notification")))
+                    elif settings.telegram_bot_token or settings.telegram_chat_id:
+                        attempts.append({
+                            "channel": "telegram",
+                            "status": "skipped",
+                            "error": "telegram is configured but disabled",
+                            "response_summary": "",
+                        })
                     if settings.bark_enabled:
                         attempts.append(notifier._attempt("bark", lambda: notifier.send_bark("CPA Codex Inspection", "Inspection bridge test notification")))
+                    elif settings.bark_device_key:
+                        attempts.append({
+                            "channel": "bark",
+                            "status": "skipped",
+                            "error": "bark is configured but disabled",
+                            "response_summary": "",
+                        })
                     self.send_json({"attempts": attempts})
                     return
                 self.send_error(HTTPStatus.NOT_FOUND)

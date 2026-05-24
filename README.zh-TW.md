@@ -82,6 +82,8 @@ python3 app.py --once
 - Bark 通知設定
 - 無異常完成與異常巡檢時的推送策略
 
+測試通知按鈕只會發送到已啟用的渠道。如果 Telegram 或 Bark 已填憑證但沒有勾選啟用，測試會被略過，UI 會顯示原因。
+
 `CPA_BASE_URL` 可以是任何能提供相容 CPA management API routes 的入口，包含 admin/reverse-proxy 網域。只要這兩個路徑能搭配管理金鑰正常使用即可：
 
 ```text
@@ -129,6 +131,8 @@ BARK_DEVICE_KEY=your-device-key
 ## Telegram
 
 用 BotFather 建立 bot，把 token 放到 `TELEGRAM_BOT_TOKEN`，並把 `TELEGRAM_CHAT_ID` 設為目標 chat ID。
+
+如果是私訊推送，請先對 bot 傳一次 `/start` 再測試。如果是群組推送，請把 bot 加入群組，並使用群組的 chat ID。
 
 ## 臨時工具定位
 

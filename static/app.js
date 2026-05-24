@@ -79,6 +79,8 @@ const translations = {
     "toast.inspectionStarted": "Inspection started",
     "toast.notificationSent": "Notification test sent",
     "toast.notificationFailed": "Notification test failed: {error}",
+    "toast.notificationNoEnabled": "Enable Telegram or Bark before testing notifications.",
+    "toast.notificationSkipped": "Notification test skipped: {error}",
     "run.recommended": "disable {disable}, enable {enable}",
     "run.detailMeta": "#{id} | {status} | {time}",
     "summary.total": "total",
@@ -150,6 +152,8 @@ const translations = {
     "toast.inspectionStarted": "巡檢已開始",
     "toast.notificationSent": "測試通知已送出",
     "toast.notificationFailed": "測試通知失敗：{error}",
+    "toast.notificationNoEnabled": "請先啟用 Telegram 或 Bark，再測試通知。",
+    "toast.notificationSkipped": "測試通知已略過：{error}",
     "run.recommended": "停用 {disable}，啟用 {enable}",
     "run.detailMeta": "#{id} | {status} | {time}",
     "summary.total": "總數",
@@ -372,9 +376,22 @@ document.querySelector("#runNowButton").addEventListener("click", async (event) 
 });
 
 document.querySelector("#testNotifyButton").addEventListener("click", async () => {
+  const draft = readForm();
+  if (!draft.telegram_enabled && !draft.bark_enabled) {
+    showToast(t("toast.notificationNoEnabled"));
+    return;
+  }
   const payload = await api("/api/notifications/test", { method: "POST" });
-  const failed = (payload.attempts || []).filter((item) => item.status !== "success");
-  showToast(failed.length ? t("toast.notificationFailed", { error: failed[0].error }) : t("toast.notificationSent"));
+  const attempts = payload.attempts || [];
+  const failed = attempts.filter((item) => item.status === "failed");
+  const skipped = attempts.filter((item) => item.status === "skipped");
+  if (failed.length) {
+    showToast(t("toast.notificationFailed", { error: failed[0].error }));
+  } else if (skipped.length) {
+    showToast(t("toast.notificationSkipped", { error: skipped[0].error }));
+  } else {
+    showToast(t("toast.notificationSent"));
+  }
 });
 
 document.querySelector("#refreshButton").addEventListener("click", refreshAll);
