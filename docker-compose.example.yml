@@ -1,0 +1,11 @@
+services:
+  cpa-inspection-bridge:
+    build: .
+    container_name: cpa-inspection-bridge
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8766:8766"
+    volumes:
+      - ./data:/data

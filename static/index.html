@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="app.title">CPA Codex Inspection Bridge</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1 data-i18n="app.title">CPA Codex Inspection Bridge</h1>
+        <p id="statusText" data-i18n="status.loading">Loading status...</p>
+      </div>
+      <div class="actions">
+        <select id="languageSelect" class="language-select" aria-label="Language">
+          <option value="en">English</option>
+          <option value="zh-TW">繁體中文</option>
+        </select>
+        <button id="runNowButton" type="button" data-i18n="actions.runNow">Run now</button>
+        <button id="testNotifyButton" type="button" class="secondary" data-i18n="actions.testNotification">Test notification</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel settings-panel">
+        <div class="panel-title">
+          <h2 data-i18n="sections.settings">Settings</h2>
+          <button id="saveButton" type="button" data-i18n="actions.save">Save</button>
+        </div>
+        <form id="settingsForm" class="settings-grid">
+          <label>
+            <span data-i18n="fields.cpaBaseUrl">CPA-compatible API Base URL</span>
+            <input name="cpa_base_url" autocomplete="off" />
+          </label>
+          <label>
+            <span data-i18n="fields.managementKey">Management key</span>
+            <input name="cpa_management_key" type="password" autocomplete="off" />
+          </label>
+          <label>
+            <span data-i18n="fields.intervalMinutes">Interval minutes</span>
+            <input name="interval_minutes" type="number" min="1" max="10080" />
+          </label>
+          <label>
+            <span data-i18n="fields.concurrency">Concurrency</span>
+            <input name="concurrency" type="number" min="1" max="32" />
+          </label>
+          <label>
+            <span data-i18n="fields.timeoutSeconds">Timeout seconds</span>
+            <input name="timeout_seconds" type="number" min="1" max="300" />
+          </label>
+          <label>
+            <span data-i18n="fields.quotaThreshold">Quota threshold</span>
+            <input name="quota_threshold" type="number" min="0" max="100" step="0.1" />
+          </label>
+          <label class="check">
+            <input name="auto_start" type="checkbox" />
+            <span data-i18n="fields.autoStart">Run shortly after startup</span>
+          </label>
+          <label class="check">
+            <input name="notify_on_success" type="checkbox" />
+            <span data-i18n="fields.notifySuccess">Notify successful clean runs</span>
+          </label>
+          <label class="check">
+            <input name="notify_on_abnormal" type="checkbox" />
+            <span data-i18n="fields.notifyAbnormal">Notify abnormal runs</span>
+          </label>
+
+          <h3>Telegram</h3>
+          <label class="check">
+            <input name="telegram_enabled" type="checkbox" />
+            <span data-i18n="fields.telegramEnabled">Enable Telegram</span>
+          </label>
+          <label>
+            <span data-i18n="fields.telegramToken">Bot token</span>
+            <input name="telegram_bot_token" type="password" autocomplete="off" />
+          </label>
+          <label>
+            <span data-i18n="fields.telegramChatId">Chat ID</span>
+            <input name="telegram_chat_id" autocomplete="off" />
+          </label>
+          <label>
+            <span data-i18n="fields.telegramApiBase">API base</span>
+            <input name="telegram_api_base" autocomplete="off" />
+          </label>
+
+          <h3>Bark</h3>
+          <label class="check">
+            <input name="bark_enabled" type="checkbox" />
+            <span data-i18n="fields.barkEnabled">Enable Bark</span>
+          </label>
+          <label>
+            <span data-i18n="fields.barkServer">Bark server</span>
+            <input name="bark_server" autocomplete="off" />
+          </label>
+          <label>
+            <span data-i18n="fields.barkDeviceKey">Device key</span>
+            <input name="bark_device_key" type="password" autocomplete="off" />
+          </label>
+          <label>
+            <span data-i18n="fields.barkGroup">Group</span>
+            <input name="bark_group" autocomplete="off" />
+          </label>
+        </form>
+      </section>
+
+      <section class="panel history-panel">
+        <div class="panel-title">
+          <h2 data-i18n="sections.history">History</h2>
+          <button id="refreshButton" type="button" class="secondary" data-i18n="actions.refresh">Refresh</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="table.id">ID</th>
+                <th data-i18n="table.status">Status</th>
+                <th data-i18n="table.started">Started</th>
+                <th data-i18n="table.total">Total</th>
+                <th data-i18n="table.abnormal">Abnormal</th>
+                <th data-i18n="table.recommended">Recommended</th>
+              </tr>
+            </thead>
+            <tbody id="runsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel detail-panel">
+        <div class="panel-title">
+          <h2 data-i18n="sections.runDetail">Run detail</h2>
+          <span id="detailMeta"></span>
+        </div>
+        <div id="summaryTiles" class="tiles"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="table.account">Account</th>
+                <th data-i18n="table.classification">Class</th>
+                <th data-i18n="table.used">Used</th>
+                <th data-i18n="table.action">Action</th>
+                <th data-i18n="table.reason">Reason</th>
+              </tr>
+            </thead>
+            <tbody id="accountsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" hidden></div>
+    <script src="/app.js"></script>
+  </body>
+</html>
