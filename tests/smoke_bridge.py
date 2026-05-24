@@ -8,7 +8,7 @@ from pathlib import Path
 
 from cpa_inspection_bridge.config import Settings, merge_settings
 from cpa_inspection_bridge.db import Database
-from cpa_inspection_bridge.notifier import looks_like_telegram_bot_token
+from cpa_inspection_bridge.notifier import looks_like_telegram_bot_token, looks_like_telegram_chat_id
 from cpa_inspection_bridge.service import BridgeService
 
 
@@ -102,6 +102,10 @@ def main() -> None:
     assert merged.telegram_bot_token == TELEGRAM_TOKEN
     assert looks_like_telegram_bot_token(TELEGRAM_TOKEN)
     assert not looks_like_telegram_bot_token(masked)
+    assert looks_like_telegram_chat_id("123456789")
+    assert looks_like_telegram_chat_id("-1001234567890")
+    assert looks_like_telegram_chat_id("@channelusername")
+    assert not looks_like_telegram_chat_id("my_bot_name")
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), MockCPAHandler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)

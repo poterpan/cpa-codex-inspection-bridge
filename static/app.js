@@ -381,6 +381,9 @@ document.querySelector("#testNotifyButton").addEventListener("click", async () =
     showToast(t("toast.notificationNoEnabled"));
     return;
   }
+  await api("/api/config", { method: "PUT", body: JSON.stringify(draft) });
+  await loadConfig();
+  await loadStatus();
   const payload = await api("/api/notifications/test", { method: "POST" });
   const attempts = payload.attempts || [];
   const failed = attempts.filter((item) => item.status === "failed");

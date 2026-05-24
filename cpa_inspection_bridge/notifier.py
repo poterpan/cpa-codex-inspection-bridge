@@ -47,6 +47,8 @@ class Notifier:
             raise RuntimeError("telegram bot token and chat id are required")
         if not looks_like_telegram_bot_token(token):
             raise RuntimeError("telegram bot token looks invalid; expected the full BotFather token like 1234567890:AA...")
+        if not looks_like_telegram_chat_id(chat_id):
+            raise RuntimeError("telegram chat id looks invalid; use a numeric chat id, a negative group id, or @channelusername")
         api_base = self.settings.telegram_api_base.strip().rstrip("/") or "https://api.telegram.org"
         endpoint = f"{api_base}/bot{token}/sendMessage"
         return post_json(endpoint, {"chat_id": chat_id, "text": text})
@@ -69,6 +71,11 @@ class Notifier:
 def looks_like_telegram_bot_token(token: str) -> bool:
     prefix, sep, suffix = token.partition(":")
     return bool(sep and prefix.isdigit() and len(suffix) >= 20)
+
+
+def looks_like_telegram_chat_id(chat_id: str) -> bool:
+    chat_id = chat_id.strip()
+    return bool(chat_id and (chat_id.lstrip("-").isdigit() or chat_id.startswith("@")))
 
 
 def render_body(summary: dict[str, Any], results: list[dict[str, Any]]) -> str:
