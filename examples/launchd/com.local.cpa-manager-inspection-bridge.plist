@@ -9,11 +9,11 @@
   <key>ProgramArguments</key>
   <array>
     <string>/usr/bin/python3</string>
-    <string>/Users/poterpan/Documents/Coding/AI-Agent/CPA-Manager-Inspection-Cron/app.py</string>
+    <string>/Users/poterpan/Developer/ai/agents/CPA-Manager-Inspection-Cron/app.py</string>
   </array>
 
   <key>WorkingDirectory</key>
-  <string>/Users/poterpan/Documents/Coding/AI-Agent/CPA-Manager-Inspection-Cron</string>
+  <string>/Users/poterpan/Developer/ai/agents/CPA-Manager-Inspection-Cron</string>
 
   <key>RunAtLoad</key>
   <true/>
